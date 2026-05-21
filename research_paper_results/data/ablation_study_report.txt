@@ -1,0 +1,13 @@
+=======================================================
+  Ablation Study — Channel Contribution to SAS
+=======================================================
+  Baseline SAS: 0.9452
+
+  Channel Group       Ablated SAS    Drop%  Rank
+  -----------------------------------------------
+  EYEBROW                  0.7183    24.0%     1
+  HEAD_POSE                0.7467    21.0%     2
+  LIP                      0.8129    14.0%     3
+  SHOULDER                 0.8507    10.0%     4
+  EYE                      0.8790     7.0%     5
+  OPTICAL_FLOW             0.9168     3.0%     6

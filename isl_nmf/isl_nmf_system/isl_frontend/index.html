@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISL NMF — Real-Time Interpreter Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   ISL NMF DASHBOARD — Dark Forensic Aesthetic
+   High-density research terminal + live visualisation
+═══════════════════════════════════════════════════ */
+:root {
+  --bg:         #080c12;
+  --bg2:        #0d1420;
+  --bg3:        #111827;
+  --border:     #1e2d3d;
+  --border2:    #243447;
+  --accent:     #38bdf8;
+  --accent2:    #0ea5e9;
+  --green:      #22c55e;
+  --red:        #ef4444;
+  --orange:     #f97316;
+  --purple:     #a855f7;
+  --yellow:     #eab308;
+  --text:       #e2e8f0;
+  --text2:      #94a3b8;
+  --text3:      #475569;
+  --mono:       'Space Mono', monospace;
+  --sans:       'DM Sans', sans-serif;
+  --display:    'Bebas Neue', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(56,189,248,0.06) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,45,61,0.3) 39px, rgba(30,45,61,0.3) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,45,61,0.3) 39px, rgba(30,45,61,0.3) 40px);
+}
+
+/* ── Header ───────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(13, 20, 32, 0.95);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.logo-text {
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: var(--text3);
+  font-family: var(--mono);
+  letter-spacing: 1px;
+  margin-top: 1px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+}
+
+.status-text {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+.fps-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  background: var(--bg3);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* ── Grid layout ──────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 340px 1fr 320px;
+  grid-template-rows: auto auto 1fr;
+  gap: 1px;
+  background: var(--border);
+  min-height: calc(100vh - 61px);
+}
+
+.panel {
+  background: var(--bg2);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.panel:hover::before { opacity: 0.5; }
+
+.panel-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border2);
+}
+
+/* ── Token output (hero section) ─────────────────── */
+.token-hero {
+  grid-column: 1 / -1;
+  padding: 28px 24px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  min-height: 120px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.token-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 40% 80% at 0% 50%, rgba(56,189,248,0.03), transparent);
+  pointer-events: none;
+}
+
+.token-label-small {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.token-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  animation: chip-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0.08;
+}
+
+@keyframes chip-in {
+  from { transform: scale(0.8) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.chip-neutral {
+  color: var(--text3);
+  border-color: var(--border2);
+}
+
+.sentence-display {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.3;
+  flex: 2;
+  min-width: 280px;
+  font-style: italic;
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  transition: all 0.4s;
+}
+
+/* ── Channel bars ─────────────────────────────────── */
+.channel-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.channel-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  width: 65px;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.15s ease-out;
+  position: relative;
+}
+
+.bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 4px; height: 100%;
+  background: rgba(255,255,255,0.6);
+  border-radius: 2px;
+}
+
+.bar-val {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  width: 34px;
+  text-align: right;
+}
+
+/* ── Confidence meter ─────────────────────────────── */
+.conf-item {
+  margin-bottom: 12px;
+}
+
+.conf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.conf-token {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text2);
+}
+
+.conf-pct {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.conf-grade {
+  font-family: var(--mono);
+  font-size: 10px;
+  background: var(--bg3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 6px;
+}
+
+.conf-bar-track {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.conf-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease-out;
+}
+
+/* ── Info rows ────────────────────────────────────── */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.info-row:last-child { border-bottom: none; }
+
+.info-key {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.info-val {
+  font-size: 12px;
+  color: var(--text);
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* ── Timeline ─────────────────────────────────────── */
+.timeline-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 18px;
+}
+
+.tl-label {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text3);
+  width: 56px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tl-track {
+  flex: 1;
+  height: 10px;
+  background: var(--bg3);
+  border-radius: 2px;
+  display: flex;
+  gap: 1px;
+  overflow: hidden;
+}
+
+.tl-block {
+  flex: 1;
+  border-radius: 1px;
+  transition: background 0.1s;
+  min-width: 2px;
+}
+
+/* ── Metric cards ─────────────────────────────────── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.metric-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+}
+
+.metric-val {
+  font-family: var(--display);
+  font-size: 28px;
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-label {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ── Caption log ──────────────────────────────────── */
+.caption-entry {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  animation: fade-in 0.4s ease;
+}
+
+.caption-entry:last-child { border-bottom: none; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.caption-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  margin-bottom: 3px;
+}
+
+.caption-tokens-small {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.caption-tok {
+  font-family: var(--mono);
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid;
+}
+
+.caption-sentence {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+/* ── Emotion badge ────────────────────────────────── */
+.emotion-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.emotion-icon { font-size: 28px; }
+
+.emotion-name {
+  font-family: var(--display);
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.emotion-conf {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+/* ── Grammar struct ───────────────────────────────── */
+.grammar-struct {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(56,189,248,0.05);
+  border: 1px solid rgba(56,189,248,0.15);
+  border-radius: 6px;
+  padding: 10px 14px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.gloss-text {
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text2);
+  margin-top: 8px;
+}
+
+/* ── Export buttons ───────────────────────────────── */
+.btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(56,189,248,0.05);
+}
+
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── Gaze compass ─────────────────────────────────── */
+.gaze-compass {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  position: relative;
+  background: var(--bg3);
+  margin: 0 auto;
+}
+
+.gaze-dot {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  transition: all 0.1s;
+  box-shadow: 0 0 8px var(--accent);
+  top: 50%; left: 50%;
+}
+
+.gaze-cross {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gaze-cross::before {
+  content: '';
+  position: absolute;
+  width: 1px; height: 100%;
+  background: var(--border2);
+}
+
+.gaze-cross::after {
+  content: '';
+  position: absolute;
+  height: 1px; width: 100%;
+  background: var(--border2);
+}
+
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .token-hero { grid-column: 1 / -1; }
+}
+@media (max-width: 700px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* ── Camera Feed Panel ─────────────────────────────── */
+.camera-panel {
+  position: relative;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  width: 100%;
+  border: 1px solid var(--border2);
+}
+.camera-panel img, .camera-panel video, .camera-panel canvas {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.cam-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(8,12,20,0.82);
+  border: 1px solid var(--border2);
+  border-radius: 4px; padding: 3px 9px;
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 1px; color: var(--green);
+  display: flex; align-items: center; gap: 6px;
+}
+.cam-rec-dot { width:7px; height:7px; border-radius:50%; background:var(--red); animation:pulse-dot 1.2s infinite; }
+.cam-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 8px 12px;
+  background: linear-gradient(transparent, rgba(8,12,20,0.9));
+  pointer-events: none;
+}
+.cam-overlay-tok { font-family:var(--mono); font-size:10px; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cam-overlay-sent { font-size:12px; color:#b0ffc0; font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+.cam-expr-bar { display:flex; gap:6px; }
+.cam-expr-item { flex:1; }
+.cam-expr-label { font-family:var(--mono); font-size:7px; color:var(--text3); margin-bottom:2px; }
+.cam-expr-track { height:3px; background:var(--bg3); border-radius:2px; overflow:hidden; }
+.cam-expr-fill { height:100%; border-radius:2px; transition:width .15s; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────── -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">🤟</div>
+    <div>
+      <div class="logo-text">ISL NMF SYSTEM</div>
+      <div class="logo-sub">NON-MANUAL FEATURE INTERPRETER · v5.0</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="fps-badge" id="peopleBadge" style="color:#0ea5e9;border-color:#0ea5e944;display:none;">👥 PEOPLE: 0</div>
+    <div class="fps-badge" id="modeBadgeHeader" style="color:#a855f7;border-color:#a855f744;">MODE: --</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="status-dot" id="connDot"></div>
+      <span class="status-text" id="connStatus">CONNECTING...</span>
+    </div>
+    <div class="fps-badge" id="fpsBadge">-- FPS · -- ms</div>
+  </div>
+</header>
+
+<!-- ── Hero Token Output ─────────────────────────── -->
+<div class="token-hero">
+  <div>
+    <div class="token-label-small">ACTIVE GRAMMAR TOKENS</div>
+    <div class="token-chips" id="tokenChips">
+      <div class="chip chip-neutral" style="color:#475569;border-color:#1e2d3d;">INITIALISING...</div>
+    </div>
+  </div>
+  <div class="sentence-display" id="sentenceDisplay">Connecting to ISL pipeline...</div>
+</div>
+
+<!-- ── Main Grid ─────────────────────────────────── -->
+<div class="grid">
+
+  <!-- ── Left column ─────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-label">Feature Channels</div>
+    <div id="channelBars">
+      <div class="channel-bar">
+        <div class="channel-name">EYEBROW</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-eyebrow" style="width:0%;background:#38bdf8"></div></div>
+        <div class="bar-val" id="val-eyebrow">0.00</div>
+      </div>
+      <div class="channel-bar">
+        <div class="channel-name">EYE/GAZE</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-eye" style="width:0%;background:#a855f7"></div></div>
+        <div class="bar-val" id="val-eye">0.00</div>
+      </div>
+      <div class="channel-bar">
+        <div class="channel-name">HEAD POSE</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-head" style="width:0%;background:#22c55e"></div></div>
+        <div class="bar-val" id="val-head">0.00</div>
+      </div>
+      <div class="channel-bar">
+        <div class="channel-name">LIP</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-lip" style="width:0%;background:#f97316"></div></div>
+        <div class="bar-val" id="val-lip">0.00</div>
+      </div>
+      <div class="channel-bar">
+        <div class="channel-name">SHOULDER</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-shoulder" style="width:0%;background:#eab308"></div></div>
+        <div class="bar-val" id="val-shoulder">0.00</div>
+      </div>
+      <div class="channel-bar">
+        <div class="channel-name">OPT FLOW</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-flow" style="width:0%;background:#f43f5e"></div></div>
+        <div class="bar-val" id="val-flow">0.00</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="panel-label">Emotion · Gaze</div>
+      <div class="emotion-display" id="emotionDisplay">
+        <div class="emotion-icon" id="emotionIcon">😐</div>
+        <div>
+          <div class="emotion-name" id="emotionName">NEUTRAL</div>
+          <div class="emotion-conf" id="emotionConf">0% confidence</div>
+        </div>
+        <div style="margin-left:auto;text-align:right;">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:4px;">GAZE INTENT</div>
+          <div class="gaze-compass">
+            <div class="gaze-cross"></div>
+            <div class="gaze-dot" id="gazeDot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="panel-label">Interaction Mode</div>
+      <div class="info-row">
+        <div class="info-key">MODE</div>
+        <div class="info-val" id="modeBadge" style="font-family:var(--mono);font-size:12px;color:var(--accent);">—</div>
+      </div>
+      <div class="info-row">
+        <div class="info-key">HAND</div>
+        <div class="info-val" id="handGesture" style="font-family:var(--mono);font-size:12px;">—</div>
+      </div>
+      <div class="info-row">
+        <div class="info-key">GAZE INTENT</div>
+        <div class="info-val" id="gazeIntentText" style="font-family:var(--mono);font-size:11px;">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Centre column ───────────────────────────── -->
+  <div style="background:var(--border);display:flex;flex-direction:column;gap:1px;">
+
+    <!-- Camera Feed -->
+    <div class="panel" style="flex:0 0 auto;">
+      <div class="panel-label">Live Camera Feed</div>
+      <div class="camera-panel" id="cameraPanel">
+        <!-- Filled by JS: MJPEG img (live) or video+canvas (demo) -->
+        <div id="camPlaceholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-family:var(--mono);font-size:11px;">Initialising...</div>
+      </div>
+      <!-- Expression mini-bars -->
+      <div class="cam-expr-bar" id="camExprBars" style="margin-top:8px;">
+        <div class="cam-expr-item"><div class="cam-expr-label">EYEBROW</div><div class="cam-expr-track"><div class="cam-expr-fill" id="cex-eyebrow" style="background:#38bdf8;width:0%"></div></div></div>
+        <div class="cam-expr-item"><div class="cam-expr-label">EYE</div><div class="cam-expr-track"><div class="cam-expr-fill" id="cex-eye" style="background:#a855f7;width:0%"></div></div></div>
+        <div class="cam-expr-item"><div class="cam-expr-label">HEAD</div><div class="cam-expr-track"><div class="cam-expr-fill" id="cex-head" style="background:#22c55e;width:0%"></div></div></div>
+        <div class="cam-expr-item"><div class="cam-expr-label">LIP</div><div class="cam-expr-track"><div class="cam-expr-fill" id="cex-lip" style="background:#f97316;width:0%"></div></div></div>
+        <div class="cam-expr-item"><div class="cam-expr-label">FLOW</div><div class="cam-expr-track"><div class="cam-expr-fill" id="cex-flow" style="background:#f43f5e;width:0%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Grammar -->
+    <div class="panel" style="flex:0 0 auto;">
+      <div class="panel-label">ISL Grammar Structure</div>
+      <div class="grammar-struct" id="grammarStruct">Awaiting input...</div>
+      <div class="gloss-text" id="glossText"></div>
+    </div>
+
+    <!-- Confidence -->
+    <div class="panel" style="flex:0 0 auto;">
+      <div class="panel-label">Semantic Confidence Fusion</div>
+      <div id="confidenceList">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--text3);">No active tokens</div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="panel" style="flex:1;">
+      <div class="panel-label">Grammar Timeline (90 frames)</div>
+      <div class="timeline-wrap" id="timelineWrap"></div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="panel" style="flex:0 0 auto;">
+      <div class="panel-label">Session Metrics</div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-val" id="metFPS" style="color:var(--green);">--</div>
+          <div class="metric-label">Frames/sec</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="metLat" style="color:var(--accent);">--</div>
+          <div class="metric-label">Latency ms</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="metFrames" style="color:var(--text2);">--</div>
+          <div class="metric-label">Total Frames</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="metCaptions" style="color:var(--purple);">--</div>
+          <div class="metric-label">Captions</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Right column ─────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-label">Caption Log</div>
+    <div id="captionLog" style="max-height:300px;overflow-y:auto;">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);">No captions yet...</div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="panel-label">Subtitle</div>
+      <div style="font-size:16px;color:var(--text);font-weight:300;font-style:italic;padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--accent);line-height:1.5;" id="subtitleDisplay">
+        —
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="panel-label">System Info</div>
+      <div class="info-row">
+        <div class="info-key">FRAME</div>
+        <div class="info-val" id="frameIdx" style="font-family:var(--mono);">—</div>
+      </div>
+      <div class="info-row">
+        <div class="info-key">LIGHTING</div>
+        <div class="info-val" id="lightingStatus" style="font-family:var(--mono);font-size:11px;">normal</div>
+      </div>
+      <div class="info-row">
+        <div class="info-key">VALIDATION</div>
+        <div class="info-val" id="validationBadge" style="font-family:var(--mono);font-size:11px;color:var(--green);">✓ Well-formed</div>
+      </div>
+      <div class="info-row">
+        <div class="info-key">PIPELINE</div>
+        <div class="info-val" style="font-family:var(--mono);font-size:10px;color:var(--text3);">7-channel NMF → SFG → Priority Resolver</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="panel-label">Export</div>
+      <div class="btn-group">
+        <a class="btn" href="/api/export/srt" target="_blank">⬇ SRT</a>
+        <a class="btn" href="/api/export/json" target="_blank">⬇ JSON</a>
+        <a class="btn" href="/api/state" target="_blank">API</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Token color map ──────────────────────────────────────────────
+const TOKEN_COLORS = {
+  "QUESTION(type=WH)":  "#38bdf8",
+  "QUESTION(type=YN)":  "#34d399",
+  "NEGATION(active)":   "#f87171",
+  "EMPHASIS(strong)":   "#fb923c",
+  "EMPHASIS(mild)":     "#fbbf24",
+  "AGREEMENT":          "#4ade80",
+  "DISAGREEMENT":       "#f87171",
+  "DOUBT":              "#c084fc",
+  "UNCERTAINTY":        "#94a3b8",
+  "SURPRISE":           "#f472b6",
+  "EXCLAMATION":        "#fb923c",
+  "TOPIC_SHIFT(true)":  "#a78bfa",
+  "TOPIC_MARKER":       "#818cf8",
+  "FOCUS":              "#22d3ee",
+  "NEUTRAL":            "#475569",
+};
+
+const EMOTION_ICONS = {
+  "HAPPY": "😄", "SAD": "😢", "ANGRY": "😠",
+  "CONFUSED": "😕", "SURPRISED": "😲", "FEARFUL": "😨",
+  "NEUTRAL": "😐",
+};
+
+// Timeline history: token → array of 90 booleans
+const TL_TOKENS = [
+  "QUESTION(type=WH)", "QUESTION(type=YN)", "NEGATION(active)",
+  "EMPHASIS(strong)", "AGREEMENT", "DOUBT", "SURPRISE", "TOPIC_SHIFT(true)", "FOCUS"
+];
+const TL_SHORT = {
+  "QUESTION(type=WH)": "WH-Q", "QUESTION(type=YN)": "YN-Q",
+  "NEGATION(active)": "NEG", "EMPHASIS(strong)": "EMPH",
+  "AGREEMENT": "AGREE", "DOUBT": "DOUBT",
+  "SURPRISE": "SURPR", "TOPIC_SHIFT(true)": "TOPIC", "FOCUS": "FOCUS",
+};
+const tlHistory = {};
+TL_TOKENS.forEach(t => { tlHistory[t] = new Array(90).fill(false); });
+
+let lastSentence = "";
+let lastTokens   = [];
+
+// ── SSE Connection with auto-reconnect ──────────────────────────
+function connectSSE() {
+  const evtSource = new EventSource("/api/stream");
+
+  evtSource.onopen = () => {
+    document.getElementById("connDot").style.background = "#22c55e";
+    document.getElementById("connStatus").textContent   = "LIVE";
+    document.getElementById("connStatus").style.color   = "#22c55e";
+  };
+
+  evtSource.onerror = () => {
+    document.getElementById("connDot").style.background = "#ef4444";
+    document.getElementById("connStatus").textContent   = "RECONNECTING...";
+    document.getElementById("connStatus").style.color   = "#ef4444";
+    evtSource.close();
+    setTimeout(connectSSE, 2000);
+  };
+
+  evtSource.onmessage = (e) => {
+    const d = JSON.parse(e.data);
+    updateDashboard(d);
+  };
+}
+connectSSE();
+
+// ── Main update function ────────────────────────────────────────
+function updateDashboard(d) {
+  // FPS badge
+  const latCol = d.latency_ms <= 25 ? "#22c55e" : d.latency_ms <= 40 ? "#eab308" : "#ef4444";
+  document.getElementById("fpsBadge").textContent = `${d.fps} FPS · ${d.latency_ms}ms`;
+  document.getElementById("fpsBadge").style.color = latCol;
+
+  // Token chips
+  updateTokenChips(d.tokens);
+
+  // Sentence
+  if (d.sentence !== lastSentence) {
+    lastSentence = d.sentence;
+    const el = document.getElementById("sentenceDisplay");
+    el.style.opacity = "0";
+    el.style.transform = "translateY(4px)";
+    setTimeout(() => {
+      el.textContent = d.sentence;
+      el.style.transition = "all 0.3s ease";
+      el.style.opacity = "1";
+      el.style.transform = "translateY(0)";
+    }, 100);
+  }
+
+  // Channel bars
+  updateChannelBar("eyebrow",  d.channels.eyebrow  || 0, "#38bdf8");
+  updateChannelBar("eye",      d.channels.eye       || 0, "#a855f7");
+  updateChannelBar("head",     d.channels.head      || 0, "#22c55e");
+  updateChannelBar("lip",      d.channels.lip       || 0, "#f97316");
+  updateChannelBar("shoulder", d.channels.shoulder  || 0, "#eab308");
+  updateChannelBar("flow",     d.channels.flow      || 0, "#f43f5e");
+
+  // Emotion
+  const emo = d.emotion || "NEUTRAL";
+  document.getElementById("emotionIcon").textContent = EMOTION_ICONS[emo] || "😐";
+  document.getElementById("emotionName").textContent = emo;
+  document.getElementById("emotionConf").textContent = `${Math.round((d.emotion_conf || 0)*100)}% confidence`;
+
+  // Gaze dot — use real gaze_x/gaze_y from backend
+  const gx = (d.gaze_x || 0);
+  const gy = (d.gaze_y || 0);
+  const dot = document.getElementById("gazeDot");
+  dot.style.left  = `${50 + gx * 120}%`;
+  dot.style.top   = `${50 + gy * 120}%`;
+
+  // Pipeline mode badge
+  const modeHeader = document.getElementById("modeBadgeHeader");
+  if (d.pipeline_mode === "live") {
+    modeHeader.textContent = "🟢 LIVE PIPELINE";
+    modeHeader.style.color = "#22c55e";
+    modeHeader.style.borderColor = "#22c55e44";
+  } else {
+    modeHeader.textContent = "🟣 DEMO MODE";
+    modeHeader.style.color = "#a855f7";
+    modeHeader.style.borderColor = "#a855f744";
+  }
+
+  // Mode + hand + gaze
+  const modeEl = document.getElementById("modeBadge");
+  modeEl.textContent = d.mode || "—";
+  const modeColors = {
+    "QUESTIONING":"#38bdf8","ASSERTING":"#22c55e","EMPHASIZING":"#f97316",
+    "THINKING":"#a855f7","LISTENING":"#94a3b8","NARRATING":"#eab308","NEUTRAL":"#475569"
+  };
+  modeEl.style.color = modeColors[d.mode] || "#94a3b8";
+  document.getElementById("handGesture").textContent = d.hand_gesture === "none" ? "—" : d.hand_gesture.toUpperCase();
+  document.getElementById("gazeIntentText").textContent = d.gaze_intent || "—";
+
+  // Grammar
+  if (d.grammar_structure) {
+    document.getElementById("grammarStruct").textContent = d.grammar_structure;
+    document.getElementById("glossText").textContent = d.gloss || "";
+  }
+
+  // Confidence
+  updateConfidence(d.confidence);
+
+  // Timeline
+  updateTimeline(d.tokens);
+
+  // Metrics
+  document.getElementById("metFPS").textContent     = d.fps;
+  document.getElementById("metLat").textContent     = d.latency_ms;
+  document.getElementById("metFrames").textContent  = (d.session_frames||0).toLocaleString();
+  document.getElementById("metCaptions").textContent = d.session_captions || 0;
+
+  // Caption log
+  if (d.captions_log && d.captions_log.length > 0) {
+    updateCaptionLog(d.captions_log);
+  }
+
+  // Subtitle
+  document.getElementById("subtitleDisplay").textContent = d.subtitle || "—";
+
+  // Frame
+  document.getElementById("frameIdx").textContent = `#${(d.frame_idx||0).toString().padStart(5,'0')}`;
+
+  // Lighting
+  document.getElementById("lightingStatus").textContent = d.lighting || "normal";
+
+  // Validation badge from real backend
+  const valEl = document.getElementById("validationBadge");
+  if (d.validation_ok !== undefined) {
+    valEl.textContent = d.validation_summary || (d.validation_ok ? "✓ Well-formed" : "⚠ Issues");
+    valEl.style.color = d.validation_ok ? "#22c55e" : "#ef4444";
+  }
+}
+
+function updateTokenChips(tokens) {
+  if (JSON.stringify(tokens) === JSON.stringify(lastTokens)) return;
+  lastTokens = [...tokens];
+  const wrap = document.getElementById("tokenChips");
+  wrap.innerHTML = "";
+  if (!tokens || tokens.length === 0 || (tokens.length === 1 && tokens[0] === "NEUTRAL")) {
+    wrap.innerHTML = `<div class="chip chip-neutral">NEUTRAL</div>`;
+    return;
+  }
+  tokens.forEach(tok => {
+    if (tok === "NEUTRAL") return;
+    const col = TOKEN_COLORS[tok] || "#94a3b8";
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.style.color = col;
+    chip.style.borderColor = col + "44";
+    chip.textContent = tok;
+    wrap.appendChild(chip);
+  });
+}
+
+function updateChannelBar(name, val, color) {
+  const pct = Math.min(val * 100, 100);
+  const bar = document.getElementById(`bar-${name}`);
+  const valEl = document.getElementById(`val-${name}`);
+  if (bar) {
+    bar.style.width = `${pct}%`;
+    bar.style.background = pct > 60 ? color :
+                           pct > 30 ? color + "bb" : color + "66";
+  }
+  if (valEl) valEl.textContent = val.toFixed(2);
+}
+
+function updateConfidence(conf) {
+  const wrap = document.getElementById("confidenceList");
+  if (!conf || Object.keys(conf).length === 0) {
+    wrap.innerHTML = `<div style="font-family:var(--mono);font-size:10px;color:var(--text3);">No active tokens</div>`;
+    return;
+  }
+  wrap.innerHTML = "";
+  Object.entries(conf).forEach(([tok, pct]) => {
+    const col = TOKEN_COLORS[tok] || "#94a3b8";
+    const grade = pct >= 85 ? "A" : pct >= 70 ? "B" : pct >= 55 ? "C" : pct >= 40 ? "D" : "F";
+    const gradeCol = pct >= 70 ? "#22c55e" : pct >= 50 ? "#eab308" : "#ef4444";
+    wrap.innerHTML += `
+      <div class="conf-item">
+        <div class="conf-header">
+          <span class="conf-token">${tok}</span>
+          <span>
+            <span class="conf-pct" style="color:${col}">${pct}%</span>
+            <span class="conf-grade" style="color:${gradeCol}">${grade}</span>
+          </span>
+        </div>
+        <div class="conf-bar-track">
+          <div class="conf-bar-fill" style="width:${pct}%;background:${col}"></div>
+        </div>
+      </div>`;
+  });
+}
+
+function updateTimeline(activeTokens) {
+  const active = new Set(activeTokens || []);
+  TL_TOKENS.forEach(tok => {
+    tlHistory[tok].push(active.has(tok));
+    if (tlHistory[tok].length > 90) tlHistory[tok].shift();
+  });
+
+  const wrap = document.getElementById("timelineWrap");
+  wrap.innerHTML = "";
+  TL_TOKENS.forEach(tok => {
+    const hist = tlHistory[tok];
+    const hasAny = hist.some(v => v);
+    const col = TOKEN_COLORS[tok] || "#94a3b8";
+    const row = document.createElement("div");
+    row.className = "tl-row";
+    const label = document.createElement("div");
+    label.className = "tl-label";
+    label.style.color = hasAny ? col : "var(--text3)";
+    label.textContent = TL_SHORT[tok] || tok.substring(0,6);
+    const track = document.createElement("div");
+    track.className = "tl-track";
+    hist.forEach(val => {
+      const block = document.createElement("div");
+      block.className = "tl-block";
+      block.style.background = val ? col : "var(--bg)";
+      track.appendChild(block);
+    });
+    row.appendChild(label);
+    row.appendChild(track);
+    wrap.appendChild(row);
+  });
+}
+
+function updateCaptionLog(entries) {
+  const wrap = document.getElementById("captionLog");
+  wrap.innerHTML = "";
+  entries.forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "caption-entry";
+    const tokens = entry.tokens || [];
+    const chipsHtml = tokens.filter(t => t !== "NEUTRAL").map(tok => {
+      const col = TOKEN_COLORS[tok] || "#94a3b8";
+      return `<span class="caption-tok" style="color:${col};border-color:${col}44">${tok.split("(")[0]}</span>`;
+    }).join("");
+    div.innerHTML = `
+      <div class="caption-time">${entry.time} · ${Math.round(entry.confidence || 0)}% conf</div>
+      <div class="caption-tokens-small">${chipsHtml}</div>
+      <div class="caption-sentence">${entry.sentence}</div>`;
+    wrap.appendChild(div);
+  });
+}
+
+// ── Camera feed setup ──────────────────────────────────────────────────────
+let _camMode = null;
+
+function setupCameraFeed(pipelineMode) {
+  if (_camMode === pipelineMode) return;
+  _camMode = pipelineMode;
+  const panel = document.getElementById("cameraPanel");
+
+  if (pipelineMode === "live") {
+    // Use MJPEG stream from backend (already annotated by OpenCV)
+    panel.innerHTML = `
+      <img id="camImg" src="/api/video_feed" alt="Live feed" style="width:100%;height:100%;object-fit:cover;display:block;">
+      <div class="cam-badge"><div class="cam-rec-dot"></div>LIVE · SERVER FEED</div>
+      <div class="cam-overlay">
+        <div class="cam-overlay-tok" id="camTokOverlay">—</div>
+        <div class="cam-overlay-sent" id="camSentOverlay">—</div>
+      </div>`;
+  } else {
+    // Demo mode: show local webcam via getUserMedia + canvas overlay
+    panel.innerHTML = `
+      <video id="camVideo" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+      <canvas id="camCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+      <div class="cam-badge"><div class="cam-rec-dot" style="background:var(--purple);"></div>DEMO · LOCAL CAM</div>
+      <div class="cam-overlay">
+        <div class="cam-overlay-tok" id="camTokOverlay">—</div>
+        <div class="cam-overlay-sent" id="camSentOverlay">—</div>
+      </div>`;
+
+    navigator.mediaDevices.getUserMedia({ video: { width:640, height:360 }, audio: false })
+      .then(stream => {
+        const vid = document.getElementById("camVideo");
+        if (vid) vid.srcObject = stream;
+      })
+      .catch(() => {
+        const vid = document.getElementById("camVideo");
+        if (vid) vid.style.background = "#080c12";
+      });
+
+    // Draw animated expression skeleton on canvas
+    _drawDemoCanvas();
+  }
+}
+
+function _drawDemoCanvas() {
+  const canvas = document.getElementById("camCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let t = 0;
+
+  function loop() {
+    if (!document.getElementById("camCanvas")) return;
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const cx = canvas.width / 2, cy = canvas.height / 2 - 20;
+    const r  = Math.min(canvas.width, canvas.height) * 0.22;
+
+    // Face circle
+    ctx.save();
+    ctx.strokeStyle = "rgba(56,189,248,0.25)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 1.25, 0, 0, Math.PI*2); ctx.stroke();
+    ctx.restore();
+
+    // Animated landmark dots
+    const pts = [
+      [cx - r*0.35, cy - r*0.2], [cx + r*0.35, cy - r*0.2],   // eyes
+      [cx - r*0.35, cy - r*0.55 + Math.sin(t*1.2)*r*0.04],    // L brow
+      [cx + r*0.35, cy - r*0.55 + Math.sin(t*1.4)*r*0.04],    // R brow
+      [cx, cy + r*0.15],                                         // nose
+      [cx, cy + r*0.55 + Math.sin(t*0.8)*r*0.08],              // mouth
+    ];
+    pts.forEach(([x,y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 2.5, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(56,189,248,0.7)";
+      ctx.fill();
+    });
+
+    // Mesh lines (face grid feel)
+    ctx.strokeStyle = "rgba(56,189,248,0.12)";
+    ctx.lineWidth = 0.8;
+    for (let i=0; i<pts.length-1; i++) {
+      ctx.beginPath();
+      ctx.moveTo(pts[i][0], pts[i][1]);
+      ctx.lineTo(pts[i+1][0], pts[i+1][1]);
+      ctx.stroke();
+    }
+
+    // Scanning line
+    const scan = (Math.sin(t * 0.5) + 1) / 2;
+    const sy = cy - r*1.25 + scan * r*2.5;
+    const grad = ctx.createLinearGradient(cx-r, sy, cx+r, sy);
+    grad.addColorStop(0, "transparent");
+    grad.addColorStop(0.5, "rgba(56,189,248,0.4)");
+    grad.addColorStop(1, "transparent");
+    ctx.strokeStyle = grad; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(cx-r, sy); ctx.lineTo(cx+r, sy); ctx.stroke();
+
+    t += 0.04;
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+// Update camera overlay text and mini expression bars from SSE data
+function updateCameraOverlay(d) {
+  const tokEl  = document.getElementById("camTokOverlay");
+  const sentEl = document.getElementById("camSentOverlay");
+  if (tokEl)  tokEl.textContent  = (d.tokens || []).filter(t=>t!=="NEUTRAL").join(" · ") || "NEUTRAL";
+  if (sentEl) sentEl.textContent = d.sentence || "—";
+
+  // mini expression bars under camera
+  const ch = d.channels || {};
+  const bars = { "eyebrow": ch.eyebrow||0, "eye": ch.eye||0, "head": ch.head||0, "lip": ch.lip||0, "flow": ch.flow||0 };
+  Object.entries(bars).forEach(([k,v]) => {
+    const el = document.getElementById(`cex-${k}`);
+    if (el) el.style.width = `${Math.min(v*100,100)}%`;
+  });
+
+  // Trigger camera setup based on pipeline mode
+  setupCameraFeed(d.pipeline_mode || "demo");
+}
+
+// Hook into existing updateDashboard
+const _origUpdate = updateDashboard;
+window.updateDashboard = function(d) {
+  updateCameraOverlay(d);
+  
+  if (d.num_faces !== undefined) {
+    const pBadge = document.getElementById("peopleBadge");
+    if (pBadge) {
+      pBadge.style.display = "block";
+      pBadge.textContent = `👥 PEOPLE: ${d.num_faces}`;
+    }
+  }
+
+  _origUpdate(d);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+╔══════════════════════════════════════════════════════════╗
+║        ISL NMF System — Evaluation Report                ║
+╠══════════════════════════════════════════════════════════╣
+║  Frames evaluated        : 790                           ║
+║  Macro Precision         : 0.9524                         ║
+║  Macro Recall            : 0.9247                         ║
+║  Macro F1                : 0.9383                         ║
+║  Weighted F1             : 0.9477                         ║
+║  Semantic Alignment (SAS): 0.9452                         ║
+║  Temporal Consistency    : 0.9680                         ║
+║  Cohen's Kappa           : 0.9254                         ║
+╠══════════════════════════════════════════════════════════╣
+║  Mean Latency            : 4.38 ms                       ║
+║  P50  Latency            : 4.12 ms                       ║
+║  P95  Latency            : 5.25 ms                       ║
+║  P99  Latency            : 6.84 ms                       ║
+╠══════════════════════════════════════════════════════════╣
+║  Per-Class Metrics:                                      ║
+║  NEUTRAL              P=0.991 R=0.983 F1=0.987  ║
+║  NEGATION             P=0.980 R=0.961 F1=0.970  ║
+║  DISAGREEMENT         P=0.979 R=0.958 F1=0.968  ║
+║  EMPHASIS             P=0.941 R=0.941 F1=0.941  ║
+║  DOUBT                P=0.938 R=0.909 F1=0.923  ║
+║  AGREEMENT            P=0.980 R=0.962 F1=0.971  ║
+║  UNCERTAINTY          P=0.926 R=0.893 F1=0.909  ║
+║  QUESTION             P=0.966 R=0.933 F1=0.949  ║
+║  QUESTION             P=0.958 R=0.920 F1=0.939  ║
+║  TOPIC_SHIFT          P=0.952 R=0.909 F1=0.930  ║
+║  FOCUS                P=0.955 R=0.913 F1=0.933  ║
+║  CONDITIONAL          P=0.929 R=0.903 F1=0.916  ║
+║  TOPIC_MARKER         P=0.939 R=0.912 F1=0.925  ║
+║  SURPRISE             P=0.960 R=0.923 F1=0.941  ║
+║  EXCLAMATION          P=0.935 R=0.906 F1=0.921  ║
+║  EMPHASIS             P=0.909 R=0.870 F1=0.889  ║
+╚══════════════════════════════════════════════════════════╝

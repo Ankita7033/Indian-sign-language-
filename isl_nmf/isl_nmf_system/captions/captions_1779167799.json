@@ -1,0 +1,501 @@
+[
+  {
+    "index": 0,
+    "frame_start": 4,
+    "frame_end": 64,
+    "timestamp_start_ms": 1779167715010.8909,
+    "timestamp_end_ms": 1779167717010.8909,
+    "tokens": [
+      "NEUTRAL"
+    ],
+    "sentence": "... [happy]",
+    "subtitle": "",
+    "confidence_pct": 50,
+    "is_final": false
+  },
+  {
+    "index": 1,
+    "frame_start": 11,
+    "frame_end": 71,
+    "timestamp_start_ms": 1779167715244.2244,
+    "timestamp_end_ms": 1779167717244.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER"
+    ],
+    "sentence": "Is that right? / Are you sure? [happy]",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 56,
+    "is_final": false
+  },
+  {
+    "index": 2,
+    "frame_start": 13,
+    "frame_end": 73,
+    "timestamp_start_ms": 1779167715310.8909,
+    "timestamp_end_ms": 1779167717310.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "SURPRISE",
+      "EXCLAMATION"
+    ],
+    "sentence": "Wow! That is amazing!",
+    "subtitle": "Wow! / Really?!",
+    "confidence_pct": 53,
+    "is_final": false
+  },
+  {
+    "index": 3,
+    "frame_start": 17,
+    "frame_end": 77,
+    "timestamp_start_ms": 1779167715444.2244,
+    "timestamp_end_ms": 1779167717444.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes! Great! I completely agree!",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 78,
+    "is_final": false
+  },
+  {
+    "index": 4,
+    "frame_start": 21,
+    "frame_end": 81,
+    "timestamp_start_ms": 1779167715577.5576,
+    "timestamp_end_ms": 1779167717577.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 79,
+    "is_final": false
+  },
+  {
+    "index": 5,
+    "frame_start": 64,
+    "frame_end": 124,
+    "timestamp_start_ms": 1779167717010.8909,
+    "timestamp_end_ms": 1779167719010.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "EMPHASIS(strong)"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Are you really...?",
+    "confidence_pct": 47,
+    "is_final": false
+  },
+  {
+    "index": 6,
+    "frame_start": 65,
+    "frame_end": 125,
+    "timestamp_start_ms": 1779167717044.2244,
+    "timestamp_end_ms": 1779167719044.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 79,
+    "is_final": false
+  },
+  {
+    "index": 7,
+    "frame_start": 78,
+    "frame_end": 138,
+    "timestamp_start_ms": 1779167717477.5576,
+    "timestamp_end_ms": 1779167719477.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes! Great! I completely agree!",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 8,
+    "frame_start": 87,
+    "frame_end": 147,
+    "timestamp_start_ms": 1779167717777.5576,
+    "timestamp_end_ms": 1779167719777.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "DOUBT",
+      "UNCERTAINTY"
+    ],
+    "sentence": "Is that right? / Are you sure? [happy]",
+    "subtitle": "I'm not sure...",
+    "confidence_pct": 65,
+    "is_final": false
+  },
+  {
+    "index": 9,
+    "frame_start": 89,
+    "frame_end": 149,
+    "timestamp_start_ms": 1779167717844.2244,
+    "timestamp_end_ms": 1779167719844.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "DOUBT",
+      "UNCERTAINTY"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "I'm not sure...",
+    "confidence_pct": 68,
+    "is_final": false
+  },
+  {
+    "index": 10,
+    "frame_start": 109,
+    "frame_end": 169,
+    "timestamp_start_ms": 1779167718510.8909,
+    "timestamp_end_ms": 1779167720510.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 11,
+    "frame_start": 123,
+    "frame_end": 183,
+    "timestamp_start_ms": 1779167718977.5576,
+    "timestamp_end_ms": 1779167720977.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 12,
+    "frame_start": 124,
+    "frame_end": 184,
+    "timestamp_start_ms": 1779167719010.8909,
+    "timestamp_end_ms": 1779167721010.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 13,
+    "frame_start": 130,
+    "frame_end": 190,
+    "timestamp_start_ms": 1779167719210.8909,
+    "timestamp_end_ms": 1779167721210.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Wait, is that right?",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 90,
+    "is_final": false
+  },
+  {
+    "index": 14,
+    "frame_start": 131,
+    "frame_end": 191,
+    "timestamp_start_ms": 1779167719244.2244,
+    "timestamp_end_ms": 1779167721244.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 90,
+    "is_final": false
+  },
+  {
+    "index": 15,
+    "frame_start": 135,
+    "frame_end": 195,
+    "timestamp_start_ms": 1779167719377.5576,
+    "timestamp_end_ms": 1779167721377.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_SHIFT(true)",
+      "AGREEMENT"
+    ],
+    "sentence": "Let us move to the next point.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 81,
+    "is_final": false
+  },
+  {
+    "index": 16,
+    "frame_start": 136,
+    "frame_end": 196,
+    "timestamp_start_ms": 1779167719410.8909,
+    "timestamp_end_ms": 1779167721410.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "FOCUS",
+      "SURPRISE",
+      "EXCLAMATION"
+    ],
+    "sentence": "Wait, is that right?",
+    "subtitle": "Wow! / Really?!",
+    "confidence_pct": 68,
+    "is_final": false
+  },
+  {
+    "index": 17,
+    "frame_start": 137,
+    "frame_end": 197,
+    "timestamp_start_ms": 1779167719444.2244,
+    "timestamp_end_ms": 1779167721444.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "FOCUS",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 78,
+    "is_final": false
+  },
+  {
+    "index": 18,
+    "frame_start": 146,
+    "frame_end": 206,
+    "timestamp_start_ms": 1779167719744.2244,
+    "timestamp_end_ms": 1779167721744.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "FOCUS",
+      "AGREEMENT"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 78,
+    "is_final": false
+  },
+  {
+    "index": 19,
+    "frame_start": 147,
+    "frame_end": 207,
+    "timestamp_start_ms": 1779167719777.5576,
+    "timestamp_end_ms": 1779167721777.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 20,
+    "frame_start": 152,
+    "frame_end": 212,
+    "timestamp_start_ms": 1779167719944.2244,
+    "timestamp_end_ms": 1779167721944.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 21,
+    "frame_start": 153,
+    "frame_end": 213,
+    "timestamp_start_ms": 1779167719977.5576,
+    "timestamp_end_ms": 1779167721977.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 22,
+    "frame_start": 157,
+    "frame_end": 217,
+    "timestamp_start_ms": 1779167720110.8909,
+    "timestamp_end_ms": 1779167722110.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "SURPRISE",
+      "EXCLAMATION"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Wow! / Really?!",
+    "confidence_pct": 67,
+    "is_final": false
+  },
+  {
+    "index": 23,
+    "frame_start": 159,
+    "frame_end": 219,
+    "timestamp_start_ms": 1779167720177.5576,
+    "timestamp_end_ms": 1779167722177.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 24,
+    "frame_start": 161,
+    "frame_end": 221,
+    "timestamp_start_ms": 1779167720244.2244,
+    "timestamp_end_ms": 1779167722244.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "SURPRISE",
+      "EXCLAMATION"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Wow! / Really?!",
+    "confidence_pct": 67,
+    "is_final": false
+  },
+  {
+    "index": 25,
+    "frame_start": 163,
+    "frame_end": 223,
+    "timestamp_start_ms": 1779167720310.8909,
+    "timestamp_end_ms": 1779167722310.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_MARKER",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 80,
+    "is_final": false
+  },
+  {
+    "index": 26,
+    "frame_start": 165,
+    "frame_end": 225,
+    "timestamp_start_ms": 1779167720377.5576,
+    "timestamp_end_ms": 1779167722377.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "FOCUS",
+      "AGREEMENT"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 78,
+    "is_final": false
+  },
+  {
+    "index": 27,
+    "frame_start": 167,
+    "frame_end": 227,
+    "timestamp_start_ms": 1779167720444.2244,
+    "timestamp_end_ms": 1779167722444.2244,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "FOCUS",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 78,
+    "is_final": false
+  },
+  {
+    "index": 28,
+    "frame_start": 168,
+    "frame_end": 228,
+    "timestamp_start_ms": 1779167720477.5576,
+    "timestamp_end_ms": 1779167722477.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_SHIFT(true)",
+      "AGREEMENT"
+    ],
+    "sentence": "Let us move to the next point.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 84,
+    "is_final": false
+  },
+  {
+    "index": 29,
+    "frame_start": 171,
+    "frame_end": 231,
+    "timestamp_start_ms": 1779167720577.5576,
+    "timestamp_end_ms": 1779167722577.5576,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "TOPIC_SHIFT(true)",
+      "AGREEMENT"
+    ],
+    "sentence": "Is that right? / Are you sure?",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 86,
+    "is_final": false
+  },
+  {
+    "index": 30,
+    "frame_start": 175,
+    "frame_end": 235,
+    "timestamp_start_ms": 1779167720710.8909,
+    "timestamp_end_ms": 1779167722710.8909,
+    "tokens": [
+      "QUESTION(type=YN)",
+      "FOCUS",
+      "AGREEMENT"
+    ],
+    "sentence": "Yes, I agree.",
+    "subtitle": "Is it...? / Are you...?",
+    "confidence_pct": 78,
+    "is_final": false
+  }
+]
